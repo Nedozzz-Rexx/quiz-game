@@ -1,0 +1,9 @@
+Instructions:
+1. Select play from the main menu.
+2. You will have to answer the questions presented to you
+3. There are 15 questions in total (5 easy, 5 moderate, 5 hard)
+4. The game ends if you answer a question incorrectly or complete all questions.
+5. Your score will be recorded in the high scores list.
+6. and most importantly, enjoy the game! Good luck! :) 
+
+
