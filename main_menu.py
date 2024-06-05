@@ -51,4 +51,4 @@ class Menu:
         Returns:
             str: The user's choice as a string.
         """
-        return input("Enter your choice: ")
+        return input("To start please enter your choice: ")

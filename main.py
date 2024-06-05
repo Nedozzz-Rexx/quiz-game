@@ -1,4 +1,5 @@
 from main_menu import Menu
+from score_manager import ScoreManager
 
 def main():
     """
@@ -20,6 +21,7 @@ def main():
     This function does not take any parameters and does not return any values.
     """
     menu = Menu('menu.txt', 'instructions.txt')
+    score_manager = ScoreManager("high_scores.csv")
     #score_manager = ScoreManager("high_scores.csv")
     #quiz_game = QuizGame(question_source, score_manager)  # question_source to be defined later
 
@@ -30,15 +32,14 @@ def main():
             print("Gotcha")
             #quiz_game.play()
         elif choice == "2":
-            #quiz_game.show_high_scores()
-            print("Gotcha")
+            score_manager.display_high_scores()
         elif choice == "3":
             menu.display_instructions()
         elif choice == "4":
-            print("Thank you for playing!")
+            print("Thank you for playing! Come play again soon!")
             break
         else:
-            print("Invalid choice. Please try again.")
+            print("Make sure to pick a number from 1 - 4.")
 
 if __name__ == "__main__":
     main()
