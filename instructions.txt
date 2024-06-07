@@ -1,9 +1,23 @@
-Instructions:
-1. Select play from the main menu.
-2. You will have to answer the questions presented to you
-3. There are 15 questions in total (5 easy, 5 moderate, 5 hard)
-4. The game ends if you answer a question incorrectly or complete all questions.
-5. Your score will be recorded in the high scores list.
-6. and most importantly, enjoy the game! Good luck! :) 
+  ___         _               _   _             
+ |_ _|_ _  __| |_ _ _ _  _ __| |_(_)___ _ _  ___
+  | || ' \(_-<  _| '_| || / _|  _| / _ \ ' \(_-<
+ |___|_||_/__/\__|_|  \_,_\__|\__|_\___/_||_/__/
+                                                
+Hey there, Quiz Master!
+
+Here's how to enjoy the game:
+
+1. Click on "Play" from the main menu.
+2. Choose your favorite type of questions:
+   - Go for Multiple Choice Questions (MCQ) if you like options.
+   - Opt for True or False (T or F) if you're feeling confident!
+3. Dive into the questions and give it your best shot!
+4. You'll have a blast answering 15 exciting questions:
+   - 5 easy ones to warm up.
+   - 5 moderate ones to keep you on your toes.
+   - 5 hard ones to challenge your brain!
+5. The fun doesn't stop until you answer incorrectly or conquer all the questions.
+6. Your amazing score will be proudly displayed in the high scores list.
+7. So, get ready for an awesome time and good luck, superstar! 🌟
 
 
