@@ -3,17 +3,45 @@ from score_manager import ScoreManager
 from quiz_game import QuizGame
 from api import get_random_questions
 from question import Question
+import time
+
+def print_slow(text, delay=0.005):
+    """
+    Print each character of the text with a delay.
+    
+    Parameters:
+        text (str): The text to print.
+        delay (float): The delay (in seconds) between printing each character. Default is 0.1 seconds.
+    """
+    for line in text.splitlines():
+        for char in line:
+            print(char, end='', flush=True)
+            time.sleep(delay)
+        print()  # Move to the next line after printing the entire line
 
 def main():
     """
     The main function that runs the game.
     """
+    print("Inside main function")  # Add a print statement to check if the function is called
     menu = Menu('menu.txt', 'instructions.txt')
     score_manager = ScoreManager("high_scores.csv")
 
     while True:
+        
+         # Read ASCII art from file
+        with open('ascii_art_title.txt', 'r') as file:
+            ascii_art = file.read()
+
+         # Print ASCII art
+        print_slow(ascii_art)
+
+
         menu.display()
         choice = menu.get_choice()
+
+        print("Choice:", choice)  # Add a print statement to check the user's choice
+
         if choice == "1":
             question_type = None
             while question_type not in ["multiple", "boolean"]:
@@ -48,4 +76,5 @@ def main():
             print("Make sure to pick a number from 1 - 4.")
 
 if __name__ == "__main__":
+    print("Before calling main function")  # Add a print statement before calling the main function
     main()
