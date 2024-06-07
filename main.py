@@ -34,6 +34,7 @@ def main():
     """
     menu = Menu('menu.txt', 'instructions.txt')
     score_manager = ScoreManager("high_scores.csv")
+    first_display = True
 
     while True:
         
@@ -42,7 +43,12 @@ def main():
             ascii_art = file.read()
 
          # Print ASCII art
-        print_slow(ascii_art)
+        if first_display:
+            print_slow(ascii_art)
+            first_display = False
+        else:
+            print(ascii_art)
+
 
 
         menu.display()
