@@ -2,6 +2,7 @@ import requests
 import json
 import os
 import logging
+import random
 
 # Comment out the desired logging level for normal execution or debugging
 logging.basicConfig(level=logging.WARNING)  # For normal execution
@@ -36,10 +37,7 @@ def save_questions_to_file(questions, filename):
 
 def load_questions_from_file(filename):
     with open(filename, 'r') as file:
-        content = file.read()
-        # Comment out the detailed logging of content
-        # logging.info(f"Reading from file {filename}: {content}")
-        data = json.loads(content)
+        data = json.load(file)
     logging.info(f"Loaded questions from file: {filename}")
     return data
 
@@ -47,7 +45,7 @@ def get_questions(difficulty, question_type):
     filename = f"data/{difficulty}_{question_type}_questions.json"
     try:
         return load_questions_from_file(filename)
-    except (FileNotFoundError, json.JSONDecodeError) as e:
+    except (FileNotFoundError, json.JSONDecodeError):
         logging.info(f"File not found or invalid JSON format: {filename}. Fetching from API.")
         url = generate_api_url(difficulty, question_type)
         questions = fetch_questions_from_api(url)
@@ -56,6 +54,17 @@ def get_questions(difficulty, question_type):
             return questions
         else:
             raise Exception("Failed to fetch questions from API.")
+
+def get_random_questions(question_type):
+    questions = []
+    difficulties = ["easy", "medium", "hard"]
+    for difficulty in difficulties:
+        difficulty_questions = get_questions(difficulty, question_type)
+        questions.extend(difficulty_questions)
+
+    # Shuffle and return 15 questions, 5 from each difficulty level
+    random.shuffle(questions)
+    return questions[:15]
 
 # For testing purposes
 #if __name__ == "__main__":

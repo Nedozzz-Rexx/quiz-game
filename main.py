@@ -1,10 +1,13 @@
 from main_menu import Menu
 from score_manager import ScoreManager
 from quiz_game import QuizGame
-from api import get_questions
+from api import get_random_questions
 from question import Question
 
 def main():
+    """
+    The main function that runs the game.
+    """
     menu = Menu('menu.txt', 'instructions.txt')
     score_manager = ScoreManager("high_scores.csv")
 
@@ -12,23 +15,15 @@ def main():
         menu.display()
         choice = menu.get_choice()
         if choice == "1":
-            difficulty = input("Choose difficulty (easy, medium, hard): ").lower().strip()
-            while difficulty not in ["easy", "medium", "hard"]:
-                print("Invalid choice. Please choose 'easy', 'medium', or 'hard'.")
-                difficulty = input("Choose difficulty (easy, medium, hard): ").lower().strip()
-
-            question_type = input("Choose question type (multiple, boolean): ").lower().strip()
+            question_type = input("Choose question type (multiple, boolean): ").lower()
             while question_type not in ["multiple", "boolean"]:
                 print("Invalid choice. Please choose 'multiple' or 'boolean'.")
-                question_type = input("Choose question type (multiple, boolean): ").lower().strip()
+                question_type = input("Choose question type (multiple, boolean): ").lower()
 
-            try:
-                questions_data = get_questions(difficulty, question_type)
-                questions = [Question(q['question'], q['incorrect_answers'] + [q['correct_answer']], q['correct_answer'], difficulty) for q in questions_data]
-                quiz_game = QuizGame(questions, score_manager)
-                quiz_game.play()
-            except Exception as e:
-                print(f"An error occurred while fetching questions: {e}")
+            questions_data = get_random_questions(question_type)
+            questions = [Question(q['question'], q['incorrect_answers'] + [q['correct_answer']], q['correct_answer'], q['difficulty']) for q in questions_data]
+            quiz_game = QuizGame(questions, score_manager)
+            quiz_game.play()
         elif choice == "2":
             score_manager.display_high_scores()
         elif choice == "3":

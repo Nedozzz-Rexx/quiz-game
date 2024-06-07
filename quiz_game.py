@@ -36,12 +36,19 @@ class QuizGame:
             for idx, answer in enumerate(question.answers):
                 print(f"{idx + 1}. {answer}")
             user_answer = input("Your answer: ")
+
+            # Check if the user entered a number or the answer itself
+            if user_answer.isdigit():
+                user_answer = question.answers[int(user_answer) - 1]
+
             if question.check_answer(user_answer):
                 self.score += question.points
                 print("Correct!")
             else:
                 print("Incorrect. Game over.")
                 break
-        self.score_manager.save_score(self.score)
+        
         print(f"Your final score is {self.score}")
-
+        name = input("Enter your name to save your score: ")
+        self.score_manager.update_high_scores(name, self.score)
+        print("Score saved!")
