@@ -1,36 +1,34 @@
 from main_menu import Menu
 from score_manager import ScoreManager
+from quiz_game import QuizGame
+from api import get_questions
+from question import Question
 
 def main():
-    """
-    The main function that runs the game.
-
-    This function initializes the menu and score manager objects, and enters a loop to display the menu and handle user choices. 
-    The menu is displayed using the `display` method of the `Menu` class, and the user's choice is obtained using the `get_choice` method of the `Menu` class.
-
-    If the user selects option 1. The `play` method of the `QuizGame` class is then called to start the quiz.
-
-    If the user selects option 2, the `show_high_scores` method of the `QuizGame` class is called to display the high scores.
-
-    If the user selects option 3, the instructions are displayed using the `display_instructions` method of the `Menu` class.
-
-    If the user selects option 4, a thank you message is displayed, and the loop is broken to exit the game.
-
-    If the user selects an invalid option, an error message is displayed, and the loop continues to display the menu.
-
-    This function does not take any parameters and does not return any values.
-    """
     menu = Menu('menu.txt', 'instructions.txt')
     score_manager = ScoreManager("high_scores.csv")
-    #score_manager = ScoreManager("high_scores.csv")
-    #quiz_game = QuizGame(question_source, score_manager)  # question_source to be defined later
 
     while True:
         menu.display()
         choice = menu.get_choice()
         if choice == "1":
-            print("Gotcha")
-            #quiz_game.play()
+            difficulty = input("Choose difficulty (easy, medium, hard): ").lower().strip()
+            while difficulty not in ["easy", "medium", "hard"]:
+                print("Invalid choice. Please choose 'easy', 'medium', or 'hard'.")
+                difficulty = input("Choose difficulty (easy, medium, hard): ").lower().strip()
+
+            question_type = input("Choose question type (multiple, boolean): ").lower().strip()
+            while question_type not in ["multiple", "boolean"]:
+                print("Invalid choice. Please choose 'multiple' or 'boolean'.")
+                question_type = input("Choose question type (multiple, boolean): ").lower().strip()
+
+            try:
+                questions_data = get_questions(difficulty, question_type)
+                questions = [Question(q['question'], q['incorrect_answers'] + [q['correct_answer']], q['correct_answer'], difficulty) for q in questions_data]
+                quiz_game = QuizGame(questions, score_manager)
+                quiz_game.play()
+            except Exception as e:
+                print(f"An error occurred while fetching questions: {e}")
         elif choice == "2":
             score_manager.display_high_scores()
         elif choice == "3":
