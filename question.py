@@ -58,4 +58,4 @@ class Question:
         Returns:
             bool: True if the user's answer matches the correct answer, ignoring case. False otherwise.
         """
-        return user_answer.lower() == self.correct_answer.lower()
+        return user_answer.lower() == self.correct_answer.lower().strip()
