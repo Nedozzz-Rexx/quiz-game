@@ -103,51 +103,21 @@ def get_questions(difficulty, question_type):
             return []
 
 def get_random_questions(question_type):
-    questions = []
+    selected_questions = []
     difficulties = ["easy", "medium", "hard"]
+    num_questions_per_difficulty = 5  # Adjust this number as needed
+    
+    print("Loading question...")
+
     for difficulty in difficulties:
         try:
-            print(f"Loading questions...")
             difficulty_questions = get_questions(difficulty, question_type)
-            questions.extend(difficulty_questions)
+            random.shuffle(difficulty_questions)  # Shuffle questions within the difficulty level
+            selected_questions.extend(difficulty_questions[:num_questions_per_difficulty])
         except Exception as e:
             logging.error(f"Error fetching questions for {difficulty} {question_type}: {e}")
             continue
 
-    for question in questions:
-        question['question'] = clean_text(question['question'])
+    return selected_questions
 
-    random.shuffle(questions)
-    return questions[:50]
 
-def main():
-    while True:
-        print("Choose question type:")
-        print("1. Multiple Choice Questions (MCQ)")
-        print("2. True or False (T or F)")
-        print("3. Go back to the main menu")
-        choice = input("Your choice: ")
-        
-        if choice == '1':
-            question_type = 'multiple'
-        elif choice == '2':
-            question_type = 'boolean'
-        elif choice == '3':
-            break
-        else:
-            print("Invalid choice. Please try again.")
-            continue
-
-        questions_data = get_random_questions(question_type)
-        for i, question in enumerate(questions_data, 1):
-            print(f"Q{i}: {question['question']}")
-            if question_type == 'multiple':
-                options = question['incorrect_answers'] + [question['correct_answer']]
-                random.shuffle(options)
-                for j, option in enumerate(options, 1):
-                    print(f"{j}. {option}")
-            answer = input("Your answer: ")
-            # Here you can add logic to check the answer and provide feedback
-
-if __name__ == "__main__":
-    main()
