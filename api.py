@@ -4,91 +4,65 @@ import os
 import logging
 import random
 import re
+import time
 
-# Comment out the desired logging level for normal execution or debugging
-logging.basicConfig(level=logging.WARNING)  # For normal execution
-# logging.basicConfig(level=logging.DEBUG)  # For debugging
+# Set up logging for debugging purposes, but default to WARNING to reduce verbosity
+logging.basicConfig(level=logging.WARNING)
 
 def generate_api_url(difficulty, question_type):
-    """
-    Generates a URL for the Open Trivia Database API with the given difficulty and question type.
-
-    Args:
-        difficulty (str): The difficulty of the questions. Must be one of 'easy', 'medium', or 'hard'.
-        question_type (str): The type of questions. Must be one of 'multiple' or 'boolean'.
-
-    Returns:
-        str: The generated URL for the API.
-
-    """
     base_url = "https://opentdb.com/api.php"
-    amount = 5
+    amount = 50
     url = f"{base_url}?amount={amount}&difficulty={difficulty}&type={question_type}"
     logging.info(f"Generated API URL: {url}")
     return url
 
 def clean_text(text):
-    # Remove HTML character entities
     text = re.sub(r"&\w+;", "", text)
-    # Remove symbols using regular expressions
     cleaned_text = re.sub(r'[^\w\s]', '', text)
-    # Replace consecutive whitespace with a single space
     cleaned_text = re.sub(r'\s+', ' ', cleaned_text)
-    return cleaned_text.strip()  # Remove leading and trailing spaces
+    return cleaned_text.strip()
 
 def fetch_questions_from_api(url):
-    """
-    Fetches questions from the Open Trivia Database API based on the given URL.
-
-    Args:
-        url (str): The URL of the Open Trivia Database API.
-
-    Returns:
-        list: A list of questions fetched from the API. 
-        If the API request fails or the response code is not 0, an empty list is returned.
-
-    Raises:
-        None
-
-    Logs:
-        - Information: The API response status code.
-        - Information: The fetched questions from the API if the response code is 0.
-        - Error: If the API request fails or the response code is not 0.
-
-    """
-    response = requests.get(url)
-    logging.info(f"API Response Status Code: {response.status_code}")
-    if response.status_code == 200:
-        data = response.json()
-        if data['response_code'] == 0:
-            # Clean the text of each question
-            cleaned_questions = []
-            for result in data['results']:
-                result['question'] = clean_text(result['question'])
-                cleaned_questions.append(result)
-            logging.info(f"Fetched questions from API: {cleaned_questions}")
-            return cleaned_questions
-    logging.error("Failed to fetch questions from API")
+    retries = 3
+    for attempt in range(retries):
+        response = requests.get(url)
+        logging.info(f"API Response Status Code: {response.status_code}")
+        if response.status_code == 200:
+            data = response.json()
+            response_code = data.get('response_code', 1)
+            if response_code == 0:
+                cleaned_questions = []
+                for result in data['results']:
+                    result['question'] = clean_text(result['question'])
+                    cleaned_questions.append(result)
+                logging.info(f"Fetched questions from API: {cleaned_questions}")
+                return cleaned_questions
+            elif response_code == 1:
+                logging.error("API Error: No results available for the query.")
+                break
+            elif response_code == 2:
+                logging.error("API Error: Invalid parameter in the API request.")
+                break
+            elif response_code == 3:
+                logging.error("API Error: Session token does not exist.")
+                break
+            elif response_code == 4:
+                logging.error("API Error: Session token has returned all possible questions.")
+                break
+            else:
+                logging.error(f"API Error: Unknown response code {response_code}.")
+                break
+        else:
+            logging.error(f"Failed to fetch questions from API. Status code: {response.status_code}, Response: {response.text}")
+            if response.status_code == 429:
+                logging.warning("Rate limit exceeded. Retrying after a delay...")
+                print("Loading... (Rate limit exceeded, retrying)")
+                time.sleep(5 * (attempt + 1))
+            else:
+                break
     return []
 
 def save_questions_to_file(questions, filename):
-    """
-    Saves a list of questions to a file with the given filename.
-
-    Parameters:
-        questions (list): A list of questions to be saved.
-        filename (str): The name of the file to save the questions to.
-
-    Returns:
-        None
-
-    Raises:
-        None
-
-    Logs:
-        - Information: The file path where the questions were saved.
-
-    """
     directory = os.path.dirname(filename)
     if not os.path.exists(directory):
         os.makedirs(directory)
@@ -98,91 +72,82 @@ def save_questions_to_file(questions, filename):
     logging.info(f"Saved questions to file: {filename}")
 
 def load_questions_from_file(filename):
-    """
-    Load questions from a file.
-
-    This function reads the contents of a file with the given filename and
-    loads the data as a JSON object. The loaded data is then returned.
-
-    Parameters:
-        filename (str): The name of the file to load the questions from.
-
-    Returns:
-        dict: The loaded questions as a JSON object.
-
-    Logs:
-        - Information: The file path where the questions were loaded from.
-    """
     with open(filename, 'r') as file:
         data = json.load(file)
     logging.info(f"Loaded questions from file: {filename}")
     return data
 
 def get_questions(difficulty, question_type):
-    """
-    Retrieves questions from a file or fetches them from the API if the file does not exist or is invalid.
-
-    Parameters:
-        difficulty (str): The difficulty level of the questions. Must be one of 'easy', 'medium', or 'hard'.
-        question_type (str): The type of questions. Must be one of 'multiple' or 'boolean'.
-
-    Returns:
-        list: A list of questions retrieved from the file or API.
-
-    Raises:
-        Exception: If the questions cannot be fetched from the API.
-
-    Logs:
-        - Information: If the file is not found or has invalid JSON format, a message is logged indicating that the questions are being fetched from the API.
-        - Information: The generated API URL is logged.
-        - Information: The questions are saved to a file after being fetched from the API.
-        - Error: If the API request fails with a non-200 status code.
-        - Error: If an error occurs during the API request.
-
-    """
     filename = f"data/{difficulty}_{question_type}_questions.json"
     try:
-        return load_questions_from_file(filename)
-    except (FileNotFoundError, json.JSONDecodeError):
-        logging.info(f"File not found or invalid JSON format: {filename}. Fetching from API.")
-        url = generate_api_url(difficulty, question_type)
-        questions = fetch_questions_from_api(url)
-        if questions:
-            save_questions_to_file(questions, filename)
+        questions = load_questions_from_file(filename)
+        if len(questions) >= 15:
+            logging.info(f"Loaded {len(questions)} questions from file: {filename}")
             return questions
         else:
-            raise Exception("Failed to fetch questions from API.")
+            logging.warning(f"Loaded only {len(questions)} questions from file: {filename}. Fetching more from API.")
+    except (FileNotFoundError, json.JSONDecodeError):
+        logging.info(f"File not found or invalid JSON format: {filename}. Fetching from API.")
+
+    url = generate_api_url(difficulty, question_type)
+    questions = fetch_questions_from_api(url)
+    if questions:
+        save_questions_to_file(questions, filename)
+        return questions
+    else:
+        logging.warning(f"Returning questions from file due to API failure: {filename}")
+        try:
+            return load_questions_from_file(filename)
+        except (FileNotFoundError, json.JSONDecodeError):
+            logging.error(f"No valid questions available for {difficulty} {question_type}.")
+            return []
 
 def get_random_questions(question_type):
-    """
-    Returns a list of 15 random questions from the specified question type.
-
-    Args:
-        question_type (str): The type of question to retrieve.
-
-    Returns:
-        list: A list of 15 random questions.
-
-    Raises:
-        None
-
-    """
     questions = []
     difficulties = ["easy", "medium", "hard"]
     for difficulty in difficulties:
-        difficulty_questions = get_questions(difficulty, question_type)
-        questions.extend(difficulty_questions)
+        try:
+            print(f"Loading questions...")
+            difficulty_questions = get_questions(difficulty, question_type)
+            questions.extend(difficulty_questions)
+        except Exception as e:
+            logging.error(f"Error fetching questions for {difficulty} {question_type}: {e}")
+            continue
 
-    # Clean the question text before returning
     for question in questions:
         question['question'] = clean_text(question['question'])
 
-    # Shuffle and return 15 questions, 5 from each difficulty level
     random.shuffle(questions)
-    return questions[:15]
+    return questions[:50]
 
+def main():
+    while True:
+        print("Choose question type:")
+        print("1. Multiple Choice Questions (MCQ)")
+        print("2. True or False (T or F)")
+        print("3. Go back to the main menu")
+        choice = input("Your choice: ")
+        
+        if choice == '1':
+            question_type = 'multiple'
+        elif choice == '2':
+            question_type = 'boolean'
+        elif choice == '3':
+            break
+        else:
+            print("Invalid choice. Please try again.")
+            continue
 
-# For testing purposes
-#if __name__ == "__main__":
- #   easy_mcq_questions = get_questions("easy", "multiple")
-  #  print(easy_mcq_questions)
+        questions_data = get_random_questions(question_type)
+        for i, question in enumerate(questions_data, 1):
+            print(f"Q{i}: {question['question']}")
+            if question_type == 'multiple':
+                options = question['incorrect_answers'] + [question['correct_answer']]
+                random.shuffle(options)
+                for j, option in enumerate(options, 1):
+                    print(f"{j}. {option}")
+            answer = input("Your answer: ")
+            # Here you can add logic to check the answer and provide feedback
+
+if __name__ == "__main__":
+    main()
