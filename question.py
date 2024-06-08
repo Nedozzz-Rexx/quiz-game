@@ -1,66 +1,60 @@
 class Question:
-    def __init__(self, text, answers, correct_answer, difficulty):
+    def __init__(self, question_type, difficulty, category, question, correct_answer, incorrect_answers, answers=None):
         """
-        Initializes a new instance of the Question class with the specified text, answers, correct answer, and difficulty.
+        Initializes a new instance of the Question class with the specified attributes.
 
         Parameters:
-            text (str): The text of the question.
-            answers (list): A list of possible answers to the question.
-            correct_answer (str): The correct answer to the question.
+            question_type (str): The type of the question.
             difficulty (str): The difficulty level of the question.
+            category (str): The category of the question.
+            question (str): The text of the question.
+            correct_answer (str): The correct answer to the question.
+            incorrect_answers (list): A list of incorrect answers.
+            answers (list): A list of all answers including correct and incorrect ones.
 
         Returns:
             None
         """
-        self.text = text
-        self.answers = answers
-        self.correct_answer = correct_answer
+        self.type = question_type
         self.difficulty = difficulty
+        self.category = category
+        self.question = question
+        self.correct_answer = correct_answer
+        self.incorrect_answers = incorrect_answers
+        self.answers = answers if answers is not None else [correct_answer] + incorrect_answers
         self.points = None  # Initialize points as None initially
 
-    def calculate_points(self, difficulty):
+    def calculate_points(self):
         """
-        Calculate the points for a given difficulty level.
-
-        Args:
-            self (Question): The Question object.
-            difficulty (str): The difficulty level of the question.
+        Calculate the points for the question based on its difficulty level.
 
         Returns:
-            int: The number of points for the given difficulty level.
+            int: The number of points for the question.
 
         Raises:
-            ValueError: If an invalid difficulty level is provided.
-
-        Examples:
-            >>> question = Question("What is the capital of France?", ["Paris", "London", "Berlin"], "Paris", "easy")
-            >>> question.calculate_points("easy")
-            1
-            >>> question.calculate_points("medium")
-            3
-            >>> question.calculate_points("hard")
-            5
+            ValueError: If the difficulty level is invalid.
         """
-        if difficulty == "easy":
+        if self.difficulty == "easy":
             return 1
-        elif difficulty == "medium":
+        elif self.difficulty == "medium":
             return 3
-        elif difficulty == "hard":
+        elif self.difficulty == "hard":
             return 5
         else:
-            raise ValueError("Invalid difficulty level provided.")
+            raise ValueError("Invalid difficulty level.")
+
 
     def check_answer(self, user_answer):
         """
-        Check if the user's answer matches the correct answer, ignoring case.
+        Check if the user's answer matches the correct answer.
 
         Args:
             user_answer (str): The user's answer to the question.
 
         Returns:
-            bool: True if the user's answer matches the correct answer, ignoring case. False otherwise.
+            bool: True if the user's answer matches the correct answer, False otherwise.
         """
-        return user_answer.lower() == self.correct_answer.lower().strip()
+        return user_answer.lower() == self.correct_answer.lower()
 
     def update_points(self):
         """
@@ -68,4 +62,4 @@ class Question:
 
         This method should be called after creating the Question object to initialize the points attribute.
         """
-        self.points = self.calculate_points(self.difficulty)
+        self.points = self.calculate_points()

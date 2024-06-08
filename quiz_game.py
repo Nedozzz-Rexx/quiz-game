@@ -3,30 +3,14 @@ import time
 
 class QuizGame:
     def __init__(self, questions, score_manager):
-        """
-        Initializes a new instance of the QuizGame class with the specified questions and score manager.
-
-        Parameters:
-            questions (List[Question]): A list of Question objects representing the questions in the quiz.
-            score_manager (ScoreManager): An instance of the ScoreManager class responsible for managing the scores.
-
-        Returns:
-            None
-        """
         self.questions = questions
         self.score_manager = score_manager
         self.score = 0
 
     def clear_screen(self):
-        """
-        Clears the terminal screen.
-        """
         os.system('cls' if os.name == 'nt' else 'clear')
 
     def print_countdown(self):
-        """
-        Prints a countdown from 3 to 1.
-        """
         for i in range(3, 0, -1):
             print(i)
             time.sleep(1)
@@ -35,30 +19,18 @@ class QuizGame:
         self.clear_screen()
 
     def announce_start(self):
-        """
-        Announce the start of the quiz with a countdown.
-        """
         print("Get ready! The quiz is about to start!")
         self.print_countdown()
 
     def announce_easy_questions(self):
-        """
-        Announce the start of the easy questions.
-        """
         print("We're starting with the easy questions. Think you can get them all right?")
         self.print_countdown()
 
     def announce_medium_questions(self):
-        """
-        Announce the start of the medium questions.
-        """
         print("Were these too easy? Now the questions will have medium difficulty.")
         self.print_countdown()
 
     def announce_hard_questions(self):
-        """
-        Announce the start of the hard questions.
-        """
         print("Now it's time for the hard questions. Good luck!")
         self.print_countdown()
 
@@ -79,10 +51,10 @@ class QuizGame:
         Returns:
             None
         """
-        self.announce_start()
+        #self.announce_start()
 
         # Announce the start of easy questions
-        self.announce_easy_questions()
+        #self.announce_easy_questions()
         current_difficulty = "easy"
         question_count = 0
 
@@ -94,27 +66,44 @@ class QuizGame:
                 self.announce_hard_questions()
                 current_difficulty = "hard"
 
-            print(question.text)
-            for idx, answer in enumerate(question.answers):
-                print(f"{idx + 1}. {answer}")
-            user_answer = input("Your answer: ")
+            print(question.question)  # Change here from question.text to question.question
 
-            # Check if the user entered a number or the answer itself
+            if question.difficulty == "boolean":
+                print("Choose either '1' for True or '2' for False.")
+                valid_options = ["1", "2"]
+            else:
+                for idx, answer in enumerate(question.answers):
+                    print(f"{idx + 1}. {answer}")
+                valid_options = [str(i) for i in range(1, len(question.answers) + 1)]
+
+            user_answer = input("Your answer: ").strip().lower()
+
+            # Validate input and handle accordingly
+            while user_answer not in valid_options:
+                print("Invalid input. Please choose a valid option.")
+                print(valid_options)
+                user_answer = input("Your answer: ").strip().lower()
+
+            # Translate boolean answers from numbers to words
+            if question.difficulty == "boolean":
+                user_answer = "True" if user_answer == "1" else "False"
+
+            # Convert the answer back to the full text if necessary
             if user_answer.isdigit():
                 user_answer = question.answers[int(user_answer) - 1]
 
             if question.check_answer(user_answer):
-                # Calculate the points based on the difficulty level of the question
-                points = question.calculate_points(current_difficulty)
+                points = question.calculate_points()  # Remove current_difficulty argument
                 self.score += points
                 print("Correct!")
                 question_count += 1
             else:
                 print("Incorrect. Game over.")
                 break
+            print(f"Your current score is {self.score}")  # Print the current score after each question
 
         print(f"Your final score is {self.score}")
-        name = input("Enter your name to save your score: ")
+        name = input("Enter your name to save your score: ").strip()
         self.score_manager.update_high_scores(name, self.score)
         print("Score saved!")
         time.sleep(2)

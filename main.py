@@ -48,17 +48,6 @@ def main():
 
     while True:
         
-        # Read ASCII art from file
-        with open('ascii_art_title.txt', 'r') as file:
-            ascii_art = file.read()
-
-        # Print ASCII art
-        if first_display:
-            print_slow(ascii_art)
-            first_display = False
-        else:
-            print(ascii_art)
-
         menu.display()
         choice = menu.get_choice()
 
@@ -71,7 +60,7 @@ def main():
                 print("1. Multiple Choice Questions (MCQ)")
                 print("2. True or False (T or F)")
                 print("3. Go back to the main menu")
-                question_type_choice = input("Your choice: ")
+                question_type_choice = input("Your choice: ").strip().lower()
                 if question_type_choice == "1":
                     question_type = "multiple"
                 elif question_type_choice == "2":
@@ -84,7 +73,14 @@ def main():
 
             if question_type:
                 questions_data = get_random_questions(question_type)
-                questions = [Question(q['question'], q['incorrect_answers'] + [q['correct_answer']], q['correct_answer'], q['difficulty']) for q in questions_data]
+                questions = [Question(
+                    question_type=q['type'], 
+                    difficulty=q['difficulty'], 
+                    category=q['category'], 
+                    question=q['question'], 
+                    correct_answer=q['correct_answer'], 
+                    incorrect_answers=q['incorrect_answers']
+                ) for q in questions_data]
                 quiz_game = QuizGame(questions, score_manager)
                 quiz_game.play()
         elif choice == "2":
