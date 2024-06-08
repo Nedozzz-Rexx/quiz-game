@@ -19,8 +19,18 @@ def print_slow(text, delay=0.005):
             time.sleep(delay)
         print()  # Move to the next line after printing the entire line
 
-def main():
+def print_ascii_art(file_path):
+    """
+    Print ASCII art from a file.
+    
+    Parameters:
+        file_path (str): The path to the ASCII art file.
+    """
+    with open(file_path, 'r') as file:
+        ascii_art = file.read()
+    print(ascii_art)
 
+def main():
     """
     The main function of the program. It initializes a Menu object and a ScoreManager object. 
     It then enters a loop where it displays the menu, gets the user's choice, and performs the corresponding action. 
@@ -38,18 +48,16 @@ def main():
 
     while True:
         
-         # Read ASCII art from file
+        # Read ASCII art from file
         with open('ascii_art_title.txt', 'r') as file:
             ascii_art = file.read()
 
-         # Print ASCII art
+        # Print ASCII art
         if first_display:
             print_slow(ascii_art)
             first_display = False
         else:
             print(ascii_art)
-
-
 
         menu.display()
         choice = menu.get_choice()
@@ -80,11 +88,12 @@ def main():
                 quiz_game = QuizGame(questions, score_manager)
                 quiz_game.play()
         elif choice == "2":
+            print_ascii_art('score_screen.txt')
             score_manager.display_high_scores()
         elif choice == "3":
             menu.display_instructions()
         elif choice == "4":
-            print("Thank you for playing! Come play again soon!")
+            print_ascii_art('end_screen.txt')
             break
         else:
             print("Make sure to pick a number from 1 - 4.")

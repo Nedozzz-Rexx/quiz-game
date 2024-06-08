@@ -86,7 +86,6 @@ class ScoreManager:
         Returns:
             None
         """
-        print("High Scores:")
         sorted_scores = sorted(self.high_scores.items(), key=lambda item: item[1], reverse=True)
         for name, score in sorted_scores:
             print(f"{name}: {score}")
