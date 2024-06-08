@@ -3,6 +3,7 @@ import json
 import os
 import logging
 import random
+import re
 
 # Comment out the desired logging level for normal execution or debugging
 logging.basicConfig(level=logging.WARNING)  # For normal execution
@@ -25,6 +26,15 @@ def generate_api_url(difficulty, question_type):
     url = f"{base_url}?amount={amount}&difficulty={difficulty}&type={question_type}"
     logging.info(f"Generated API URL: {url}")
     return url
+
+def clean_text(text):
+    # Remove HTML character entities
+    text = re.sub(r"&\w+;", "", text)
+    # Remove symbols using regular expressions
+    cleaned_text = re.sub(r'[^\w\s]', '', text)
+    # Replace consecutive whitespace with a single space
+    cleaned_text = re.sub(r'\s+', ' ', cleaned_text)
+    return cleaned_text.strip()  # Remove leading and trailing spaces
 
 def fetch_questions_from_api(url):
     """
@@ -51,8 +61,13 @@ def fetch_questions_from_api(url):
     if response.status_code == 200:
         data = response.json()
         if data['response_code'] == 0:
-            logging.info(f"Fetched questions from API: {data['results']}")
-            return data['results']
+            # Clean the text of each question
+            cleaned_questions = []
+            for result in data['results']:
+                result['question'] = clean_text(result['question'])
+                cleaned_questions.append(result)
+            logging.info(f"Fetched questions from API: {cleaned_questions}")
+            return cleaned_questions
     logging.error("Failed to fetch questions from API")
     return []
 
@@ -158,9 +173,14 @@ def get_random_questions(question_type):
         difficulty_questions = get_questions(difficulty, question_type)
         questions.extend(difficulty_questions)
 
+    # Clean the question text before returning
+    for question in questions:
+        question['question'] = clean_text(question['question'])
+
     # Shuffle and return 15 questions, 5 from each difficulty level
     random.shuffle(questions)
     return questions[:15]
+
 
 # For testing purposes
 #if __name__ == "__main__":
