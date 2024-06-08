@@ -16,7 +16,7 @@ class Question:
         self.answers = answers
         self.correct_answer = correct_answer
         self.difficulty = difficulty
-        self.points = self.calculate_points(difficulty)
+        self.points = None  # Initialize points as None initially
 
     def calculate_points(self, difficulty):
         """
@@ -30,7 +30,7 @@ class Question:
             int: The number of points for the given difficulty level.
 
         Raises:
-            None
+            ValueError: If an invalid difficulty level is provided.
 
         Examples:
             >>> question = Question("What is the capital of France?", ["Paris", "London", "Berlin"], "Paris", "easy")
@@ -47,6 +47,8 @@ class Question:
             return 3
         elif difficulty == "hard":
             return 5
+        else:
+            raise ValueError("Invalid difficulty level provided.")
 
     def check_answer(self, user_answer):
         """
@@ -59,3 +61,11 @@ class Question:
             bool: True if the user's answer matches the correct answer, ignoring case. False otherwise.
         """
         return user_answer.lower() == self.correct_answer.lower().strip()
+
+    def update_points(self):
+        """
+        Update the points for the question based on its difficulty level.
+
+        This method should be called after creating the Question object to initialize the points attribute.
+        """
+        self.points = self.calculate_points(self.difficulty)
