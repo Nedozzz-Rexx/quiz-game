@@ -48,7 +48,7 @@ def main():
     first_display = True
 
     while True:
-        
+        clear_screen()  # Clear the screen before displaying the menu
         menu.display()
         choice = menu.get_choice()
 
@@ -57,6 +57,7 @@ def main():
         if choice == "1":
             question_type = None
             while question_type not in ["multiple", "boolean"]:
+                clear_screen()  # Clear the screen before displaying question type choices
                 print("Choose question type:")
                 print("1. Multiple Choice Questions (MCQ)")
                 print("2. True or False (T or F)")
@@ -70,7 +71,10 @@ def main():
                     break  # Go back to the main menu
                 else:
                     print("Invalid choice. Please choose 1, 2, or 3.")
+                    getch()  # Wait for a key press before clearing the screen
+                    clear_screen()  # Clear the screen after invalid choice
                     continue
+                clear_screen()  # Clear the screen after valid choice
 
             if question_type:
                 questions_data = get_random_questions(question_type)
@@ -83,6 +87,7 @@ def main():
                     incorrect_answers=q['incorrect_answers']
                 ) for q in questions_data]
                 quiz_game = QuizGame(questions, score_manager)
+                clear_screen()  # Clear the screen before starting the quiz game
                 quiz_game.play()
         elif choice == "2":
             clear_screen()
@@ -90,18 +95,21 @@ def main():
             score_manager.display_high_scores()
             print("Press any key to return to the main menu")
             getch()  # Wait for a key press
-            clear_screen()  # Clear the screen
+            clear_screen()  # Clear the screen after displaying high scores
         elif choice == "3":
             clear_screen()
             menu.display_instructions()
             print("Press any key to return to the main menu")
             getch()  # Wait for a key press
-            clear_screen()  # Clear the screen
+            clear_screen()  # Clear the screen after displaying instructions
         elif choice == "4":
+            clear_screen()  # Clear the screen before displaying the end screen
             print_ascii_art('end_screen.txt')
             break
         else:
             print("Make sure to pick a number from 1 - 4.")
+            getch()  # Wait for a key press before clearing the screen
+            clear_screen()  # Clear the screen after invalid choice
 
 if __name__ == "__main__":
     main()

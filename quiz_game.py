@@ -1,6 +1,6 @@
 import os
 import time
-
+from utils import getch, clear_screen
 class QuizGame:
     def __init__(self, questions, score_manager):
         self.questions = questions
@@ -51,10 +51,11 @@ class QuizGame:
         Returns:
             None
         """
-        #self.announce_start()
+        #self.clear_screen()  # Clear the screen before starting the quiz game
+        self.announce_start()
 
         # Announce the start of easy questions
-        #self.announce_easy_questions()
+        self.announce_easy_questions()
         current_difficulty = "easy"
         question_count = 0
 
@@ -66,6 +67,7 @@ class QuizGame:
                 self.announce_hard_questions()
                 current_difficulty = "hard"
 
+            self.clear_screen()  # Clear the screen before displaying the question
             print(question.question)  # Change here from question.text to question.question
 
             if question.difficulty == "boolean":
@@ -79,9 +81,11 @@ class QuizGame:
             user_answer = input("Your answer: ").strip().lower()
 
             # Validate input and handle accordingly
-            while user_answer not in valid_options:
+            if user_answer not in valid_options:
                 print("Invalid input. Please choose a valid option.")
                 print(valid_options)
+
+            while user_answer not in valid_options:
                 user_answer = input("Your answer: ").strip().lower()
 
             # Translate boolean answers from numbers to words
@@ -92,19 +96,24 @@ class QuizGame:
             if user_answer.isdigit():
                 user_answer = question.answers[int(user_answer) - 1]
 
+            self.clear_screen()  # Clear the screen after displaying the question
+
             if question.check_answer(user_answer):
                 points = question.calculate_points()  # Remove current_difficulty argument
                 self.score += points
-                print("Correct!")
+                print("Correct! Next question!")
                 question_count += 1
+                print(f"Your current score is {self.score}")  # Print the current score after each question
+                time.sleep(1.5)  # Pause for 1 second
             else:
                 print("Incorrect. Game over.")
                 break
-            print(f"Your current score is {self.score}")  # Print the current score after each question
 
         print(f"Your final score is {self.score}")
         name = input("Enter your name to save your score: ").strip()
         self.score_manager.update_high_scores(name, self.score)
         print("Score saved!")
         time.sleep(2)
-        self.clear_screen()
+        self.clear_screen()  # Clear the screen after the quiz game ends
+
+
