@@ -4,6 +4,7 @@ from quiz_game import QuizGame
 from api import get_random_questions
 from question import Question
 import time
+from utils import getch, clear_screen  # Import the functions from utils.py
 
 def print_slow(text, delay=0.005):
     """
@@ -84,10 +85,18 @@ def main():
                 quiz_game = QuizGame(questions, score_manager)
                 quiz_game.play()
         elif choice == "2":
+            clear_screen()
             print_ascii_art('score_screen.txt')
             score_manager.display_high_scores()
+            print("Press any key to return to the main menu")
+            getch()  # Wait for a key press
+            clear_screen()  # Clear the screen
         elif choice == "3":
+            clear_screen()
             menu.display_instructions()
+            print("Press any key to return to the main menu")
+            getch()  # Wait for a key press
+            clear_screen()  # Clear the screen
         elif choice == "4":
             print_ascii_art('end_screen.txt')
             break
