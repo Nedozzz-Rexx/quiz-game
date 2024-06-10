@@ -42,7 +42,7 @@ class QuizGame:
         For each question, the answers are displayed with corresponding numbers.
         The user is prompted to enter their answer, which is then checked against the correct answer.
         If the user's answer is correct, the score is incremented by the question's points and a "Correct!" message is printed.
-        If the user's answer is incorrect, a "Incorrect. Game over." message is printed and the loop is broken.
+        If the user's answer is incorrect, the correct answer is revealed and the loop is broken.
         After the quiz is completed, the final score is saved using the `score_manager` and displayed to the user.
 
         Parameters:
@@ -51,7 +51,6 @@ class QuizGame:
         Returns:
             None
         """
-        #self.clear_screen()  # Clear the screen before starting the quiz game
         self.announce_start()
 
         # Announce the start of easy questions
@@ -67,8 +66,8 @@ class QuizGame:
                 self.announce_hard_questions()
                 current_difficulty = "hard"
 
-            self.clear_screen()  # Clear the screen before displaying the question
-            print(question.question)  # Change here from question.text to question.question
+            clear_screen()
+            print(question.question)
 
             if question.difficulty == "boolean":
                 print("Choose either '1' for True or '2' for False.")
@@ -81,39 +80,39 @@ class QuizGame:
             user_answer = input("Your answer: ").strip().lower()
 
             # Validate input and handle accordingly
-            if user_answer not in valid_options:
-                print("Invalid input. Please choose a valid option.")
-                print(valid_options)
-
-            while user_answer not in valid_options:
-                user_answer = input("Your answer: ").strip().lower()
-
-            # Translate boolean answers from numbers to words
             if question.difficulty == "boolean":
+                while user_answer not in valid_options:
+                    print("Invalid input. Please choose '1' for True or '2' for False.")
+                    user_answer = input("Your answer: ").strip().lower()
                 user_answer = "True" if user_answer == "1" else "False"
-
-            # Convert the answer back to the full text if necessary
-            if user_answer.isdigit():
+            else:
+                while user_answer not in valid_options:
+                    print("Invalid input. Please choose a valid option.")
+                    user_answer = input("Your answer: ").strip().lower()
                 user_answer = question.answers[int(user_answer) - 1]
-
-            self.clear_screen()  # Clear the screen after displaying the question
 
             if question.check_answer(user_answer):
                 points = question.calculate_points()  # Remove current_difficulty argument
                 self.score += points
-                print("Correct! Next question!")
+                print("Correct!")
+                time.sleep(1)  # Pause to show "Correct!" message
                 question_count += 1
-                print(f"Your current score is {self.score}")  # Print the current score after each question
-                time.sleep(1.5)  # Pause for 1 second
             else:
-                print("Incorrect. Game over.")
+                correct_answer = question.correct_answer
+                if question.difficulty == "boolean":
+                    correct_answer = "True" if correct_answer == "True" else "False"
+                print(f"Incorrect. The correct answer is: {correct_answer}. Game over.")
+                time.sleep(2)  # Pause to show the correct answer
                 break
+
+            print(f"Your current score is {self.score}")  # Print the current score after each question
+            time.sleep(1)  # Pause to show the current score
 
         print(f"Your final score is {self.score}")
         name = input("Enter your name to save your score: ").strip()
         self.score_manager.update_high_scores(name, self.score)
         print("Score saved!")
         time.sleep(2)
-        self.clear_screen()  # Clear the screen after the quiz game ends
+        clear_screen()
 
 
