@@ -124,15 +124,12 @@ Fantastic job! Your environment is all set up and ready to go. Time to dive into
 ![Error Handling](path/to/image.png)
 
 ## Conclusion
-### Summary
-<!-- Add your content here -->
 
 ### Reflection on the Challenges Faced and Lessons Learned
 <!-- Add your content here -->
 
-## References
+### Future improvements
 <!-- Add your content here -->
 
-## Appendices
-### Additional Information
+## Tools used
 <!-- Add your content here -->
