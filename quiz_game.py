@@ -6,6 +6,24 @@ import random  # to use shuffle function
 
 class QuizGame:
 
+    def __init__(self, questions, score_manager):
+        """
+        Initializes a new instance of the QuizGame class.
+
+        Args:
+            questions (list): A list of question objects.
+            score_manager (ScoreManager): An instance of the ScoreManager class.
+
+        Returns:
+            None
+
+        This constructor initializes the QuizGame object with the provided questions and score manager.
+        It also initializes the score attribute to 0.
+        """
+        self.questions = questions
+        self.score_manager = score_manager
+        self.score = 0
+
     def print_ascii_art(self, file_path):
         """
         Prints ASCII art from a text file.
@@ -41,24 +59,6 @@ class QuizGame:
             sys.stdout.write(char)
             sys.stdout.flush()
             time.sleep(0.03)  # Adjust the speed of animation here
-
-    def __init__(self, questions, score_manager):
-        """
-        Initializes a new instance of the QuizGame class.
-
-        Args:
-            questions (list): A list of question objects.
-            score_manager (ScoreManager): An instance of the ScoreManager class.
-
-        Returns:
-            None
-
-        This constructor initializes the QuizGame object with the provided questions and score manager.
-        It also initializes the score attribute to 0.
-        """
-        self.questions = questions
-        self.score_manager = score_manager
-        self.score = 0
 
     def print_countdown(self):
         """
