@@ -164,7 +164,7 @@ Effective error handling is a critical aspect of this quiz game, ensuring that t
 ### Future Improvements
 - **Potential Enhancements:**
   - Add a settings menu, where the user can choose if they want to reveal the correct answer after they got it wrong, and adding the flexibility of adjusting how the gameplay is.
-  - Add more logging for better debugging and tracking of program execution.
+  - Add more logging for better debugging and tracking of program execution, and improve on testing implementations.
 
 ## Tools used
 
