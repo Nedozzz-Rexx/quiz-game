@@ -9,11 +9,10 @@ __pycache__/
 # Distribution / packaging
 .Python
 env/
-venv/
+.venv/
 ENV/
 env.bak/
 venv.bak/
-.venv/
 
 # Unit test / coverage reports
 htmlcov/
@@ -38,9 +37,6 @@ coverage.xml
 # Environments
 .env
 .venv
-env/
-venv/
-ENV/
 env.bak/
 venv.bak/
 

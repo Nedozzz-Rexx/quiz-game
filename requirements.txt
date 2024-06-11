@@ -1,3 +1,9 @@
-# Example dependencies
 flask
 requests
+csv
+datetime
+random
+typing
+requests
+logging
+
