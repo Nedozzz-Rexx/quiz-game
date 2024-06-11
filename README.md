@@ -34,7 +34,7 @@
 ## Implementation Details
 ### Quiz Game Structure
 <!-- Add your content here -->
-![Quiz Game Structure](path/to/image.png)
+![Quiz Game Structure](/Users/unicorn/Desktop/Python projects/the_quiz_game_flowchart.png)
 
 ### Class-Based Approach and Methods
 <!-- Add your content here -->
