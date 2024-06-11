@@ -187,6 +187,7 @@ class QuizGame:
             # Validate input and handle accordingly
             while user_answer not in valid_options:
                 print("Invalid input. Please choose a valid option.")
+                print(f"Valid options: {valid_options}")
                 user_answer = input("Your answer: ").strip().lower()
 
             user_answer = randomized_answers[int(user_answer) - 1]
