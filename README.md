@@ -14,7 +14,7 @@
    - [Error Handling](#error-handling)
 5. [Conclusion](#conclusion)
 6. [Tools used](#tools-used)
-   
+7. [Appendix](#Appendix)
 
 ## Introduction
 
@@ -178,6 +178,11 @@ Effective error handling is a critical aspect of this quiz game, ensuring that t
 
 ## Appendix
 
-### Youtube Link to demo
+### YouTube Demo: Trivia Game Implementation with Python and VS Code
+
+[![Trivia Game Demo](https://img.youtube.com/vi/NaluRsbmvEw/maxresdefault.jpg)](https://youtu.be/NaluRsbmvEw)
+
+Watch the demo video showcasing the implementation of a trivia game using Python and VS Code. Explore the integration of API techniques and version control strategies to create a seamless gaming experience. Join us on this journey into the world of technology and psychology!
+
 
 
