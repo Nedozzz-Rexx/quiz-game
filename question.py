@@ -10,7 +10,8 @@ class Question:
             question (str): The text of the question.
             correct_answer (str): The correct answer to the question.
             incorrect_answers (list): A list of incorrect answers.
-            answers (list): A list of all answers including correct and incorrect ones.
+            answers (list, optional): A list of all answers including correct and incorrect ones.
+                If not provided, it defaults to [correct_answer] + incorrect_answers.
 
         Returns:
             None

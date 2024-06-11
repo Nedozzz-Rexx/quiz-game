@@ -7,17 +7,51 @@ import random  # to use shuffle function
 class QuizGame:
 
     def print_with_animation(self, text):
+        """
+        Prints the given text with an animation effect.
+
+        Args:
+            text (str): The text to be printed with animation.
+
+        Returns:
+            None
+
+        This function iterates over each character in the given text and prints it one by one.
+        It flushes the output after each character to ensure immediate display.
+        The function also adds a small delay of 0.03 seconds between each character to create an animation effect.
+        """
         for char in text:
             sys.stdout.write(char)
             sys.stdout.flush()
             time.sleep(0.03)  # Adjust the speed of animation here
 
     def __init__(self, questions, score_manager):
+        """
+        Initializes a new instance of the QuizGame class.
+
+        Args:
+            questions (list): A list of question objects.
+            score_manager (ScoreManager): An instance of the ScoreManager class.
+
+        Returns:
+            None
+
+        This constructor initializes the QuizGame object with the provided questions and score manager.
+        It also initializes the score attribute to 0.
+        """
         self.questions = questions
         self.score_manager = score_manager
         self.score = 0
 
     def print_countdown(self):
+        """
+        Prints a countdown from 3 to 1, followed by "Let's go!" and a delay of 1 second.
+        Clears the screen after the countdown and delay.
+
+        This function does not take any parameters.
+
+        This function does not return any value.
+        """
         for i in range(3, 0, -1):
             print(i)
             time.sleep(1)
@@ -26,22 +60,59 @@ class QuizGame:
         clear_screen()
 
     def announce_start(self):
+        """
+        Announces the start of the quiz and prints a countdown from 3 to 1.
+        
+        This function does not take any parameters.
+        
+        This function does not return any value.
+        """
         print("Get ready! The quiz is about to start!")
         self.print_countdown()
 
     def announce_easy_questions(self):
+        """
+        Announces the start of the easy questions and prints a countdown from 3 to 1.
+
+        This function does not take any parameters.
+
+        This function does not return any value.
+        """
         print("We're starting with the easy questions. Think you can get them all right?")
         self.print_countdown()
 
     def announce_medium_questions(self):
+        """
+        Announces the start of the medium questions and prints a countdown from 3 to 1.
+
+        This function does not take any parameters.
+
+        This function does not return any value.
+        """
         print("Were these too easy? Now the questions will have medium difficulty.")
         self.print_countdown()
 
     def announce_hard_questions(self):
+        """
+        Announces the start of the hard questions and prints a countdown from 3 to 1.
+
+        This function does not take any parameters.
+
+        This function does not return any value.
+        """
         print("Now it's time for the hard questions. Good luck!")
         self.print_countdown()
 
     def randomize_answers(self, question):
+        """
+        Randomizes the order of the answers for a given question.
+
+        Args:
+            question (Question): The question object containing the correct answer and incorrect answers.
+
+        Returns:
+            list: A list of answers in randomized order, with the correct answer included.
+        """
         all_answers = question.incorrect_answers[:]
         all_answers.append(question.correct_answer)
         random.shuffle(all_answers)
@@ -49,7 +120,7 @@ class QuizGame:
 
     def play(self):
         """
-        Play the quiz game.
+        Plays the quiz game.
 
         This method iterates over each question in the `questions` list and presents it to the user.
         For each question, the answers are displayed with corresponding numbers.

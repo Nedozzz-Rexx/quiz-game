@@ -54,6 +54,13 @@ class ScoreManager:
         Parameters:
             player_name (str): The name of the player.
             score (int): The score of the player.
+
+        Returns:
+            None
+
+        This function updates the high scores by checking if the player's score is higher than the existing score for the player. 
+        If the score is higher, the player's score and date are updated. If the player does not exist in the high scores list, a new entry is added. 
+        The high scores list is then sorted in descending order based on the score. Finally, the updated high scores are saved to a file.
         """
         date_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         updated = False
@@ -76,7 +83,6 @@ class ScoreManager:
         Displays the top 10 high scores in descending order with ranks.
         """
         titles = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th"]
-        print("High Scores:""\n")
         for idx, entry in enumerate(self.high_scores[:10]):  # Display only the top 10 scores
             title = titles[idx] if idx < len(titles) else f"{idx+1}th"
             print(f"{title}: {entry['name']} - {entry['score']} (on {entry['date']})\n")

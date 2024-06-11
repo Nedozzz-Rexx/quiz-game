@@ -4,15 +4,15 @@ from quiz_game import QuizGame
 from api import get_random_questions
 from question import Question
 import time
-from utils import getch, clear_screen  # Import the functions from utils.py
+from utils import getch, clear_screen  # Importing the functions from utils.py
 
-def print_slow(text, delay=0.005):
+def print_slow(text, delay=0.005): #Here the time of the animation can be adjusted
     """
     Print each character of the text with a delay.
     
     Parameters:
         text (str): The text to print.
-        delay (float): The delay (in seconds) between printing each character. Default is 0.1 seconds.
+        delay (float): The delay (in seconds) between printing each character. Default is 0.005 seconds.
     """
     for line in text.splitlines():
         for char in line:
@@ -33,8 +33,8 @@ def print_ascii_art(file_path):
 
 def main():
     """
-    The main function of the program. It initializes a Menu object and a ScoreManager object. 
-    It then enters a loop where it displays the menu, gets the user's choice, and performs the corresponding action. 
+    The main function of the program. It initializes a Menu object and a ScoreManager object.
+    It then enters a loop where it displays the menu, gets the user's choice, and performs the corresponding action.
     The loop continues until the user chooses to exit.
 
     Parameters:
@@ -45,11 +45,23 @@ def main():
     """
     menu = Menu('menu.txt', 'instructions.txt')
     score_manager = ScoreManager("high_scores.csv")
-    first_display = True
+    first_display = True # To print ASCII art only once
+
+    # Read the ASCII art file content once
+    with open('ascii_art_title.txt', 'r') as file:
+        ascii_art = file.read()
 
     while True:
         clear_screen()  # Clear the screen before displaying the menu
+
+        # To print ASCII art, but making sure it only prints the first time
+        if first_display:
+            print_slow(ascii_art)
+            first_display = False
+        else:
+            print(ascii_art)
         menu.display()
+
         choice = menu.get_choice()
 
         print("Choice:", choice)  # Add a print statement to check the user's choice
