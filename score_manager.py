@@ -83,6 +83,7 @@ class ScoreManager:
         Displays the top 10 high scores in descending order with ranks.
         """
         titles = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th"]
-        for idx, entry in enumerate(self.high_scores[:10]):  # Display only the top 10 scores
+        sorted_scores = sorted(self.high_scores, key=lambda x: x["score"], reverse=True)[:10]
+        for idx, entry in enumerate(sorted_scores):  # Display only the top 10 scores
             title = titles[idx] if idx < len(titles) else f"{idx+1}th"
             print(f"{title}: {entry['name']} - {entry['score']} (on {entry['date']})\n")
