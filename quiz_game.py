@@ -6,6 +6,23 @@ import random  # to use shuffle function
 
 class QuizGame:
 
+    def print_ascii_art(self, file_path):
+        """
+        Prints ASCII art from a text file.
+
+        Args:
+            file_path (str): The path to the text file containing the ASCII art.
+
+        Returns:
+            None
+        """
+        try:
+            with open(file_path, "r") as file:
+                ascii_art = file.read()
+                print(ascii_art)
+        except FileNotFoundError:
+            print("Error: ASCII art file not found.")
+
     def print_with_animation(self, text):
         """
         Prints the given text with an animation effect.
@@ -78,6 +95,7 @@ class QuizGame:
 
         This function does not return any value.
         """
+        clear_screen()
         print("We're starting with the easy questions. Think you can get them all right?")
         self.print_countdown()
 
@@ -89,6 +107,7 @@ class QuizGame:
 
         This function does not return any value.
         """
+        clear_screen()
         print("Were these too easy? Now the questions will have medium difficulty.")
         self.print_countdown()
 
@@ -100,6 +119,7 @@ class QuizGame:
 
         This function does not return any value.
         """
+        clear_screen()
         print("Now it's time for the hard questions. Good luck!")
         self.print_countdown()
 
@@ -191,5 +211,13 @@ class QuizGame:
         name = input("Enter your name to save your score: ").strip()
         self.score_manager.update_high_scores(name, self.score)
         print("Score saved!")
-        time.sleep(2)
-        clear_screen()
+
+        if self.score == 45:  # This is the most points a person can score, meaning they won!
+            self.print_ascii_art('congrats.txt')
+            
+            time.sleep(5)
+            clear_screen()
+        else:
+            input("Press any key to return to the main menu")
+
+
